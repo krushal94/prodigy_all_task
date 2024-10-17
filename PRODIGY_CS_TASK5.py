@@ -1,27 +1,23 @@
-!pip install scapy
+pip install scapy
+
 from scapy.all import sniff
 from scapy.layers.inet import IP, TCP, UDP
 
 # Function to analyze each packet
-def analyze_packet(packet):
-    # Check if it's an IP packet
-    if IP in packet:
-        ip_src = packet[IP].src
-        ip_dst = packet[IP].dst
-        protocol = packet[IP].proto
+from scapy.all import rdpcap
 
-        # TCP packets
-        if TCP in packet:
-            print(f"TCP Packet: {ip_src} -> {ip_dst}, Src Port: {packet[TCP].sport}, Dst Port: {packet[TCP].dport}")
-        
-        # UDP packets
-        elif UDP in packet:
-            print(f"UDP Packet: {ip_src} -> {ip_dst}, Src Port: {packet[UDP].sport}, Dst Port: {packet[UDP].dport}")
-        
-        # Other IP packets (ICMP, etc.)
-        else:
-            print(f"IP Packet: {ip_src} -> {ip_dst}, Protocol: {protocol}")
+# Read the uploaded PCAP file (change 'yourfile.pcap' to the name of your uploaded file)
+packets = rdpcap('/content/ws-4-c2_00001_20230926174511311.pcap')
 
-# Capture packets with sniff (You can change the interface and count)
-print("Starting packet capture... Press Ctrl+C to stop.")
-sniff(filter="ip", prn=analyze_packet, count=10)  # Captures 10 packets
+# Analyze first 10 packets (you can change the range)
+for i, packet in enumerate(packets[:10]):
+    print(f"Packet {i+1}:")
+    packet.show()  # Display detailed info about each packet
+
+tcp_packets = [pkt for pkt in packets if pkt.haslayer('TCP')]
+print(f"Total TCP Packets: {len(tcp_packets)}")
+
+ip_src = [pkt['IP'].src for pkt in packets if pkt.haslayer('IP')]
+ip_dst = [pkt['IP'].dst for pkt in packets if pkt.haslayer('IP')]
+print(f"Source IPs: {set(ip_src)}")
+print(f"Destination IPs: {set(ip_dst)}")
