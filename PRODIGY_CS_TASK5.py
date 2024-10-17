@@ -7,7 +7,7 @@ from scapy.layers.inet import IP, TCP, UDP
 from scapy.all import rdpcap
 
 # Read the uploaded PCAP file (change 'yourfile.pcap' to the name of your uploaded file)
-packets = rdpcap('/content/ws-4-c2_00001_20230926174511311.pcap')
+packets = rdpcap('/content/data.pcappng')
 
 # Analyze first 10 packets (you can change the range)
 for i, packet in enumerate(packets[:10]):
