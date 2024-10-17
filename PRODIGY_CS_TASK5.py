@@ -1,4 +1,4 @@
-pip install scapy
+!pip install scapy
 from scapy.all import sniff
 from scapy.layers.inet import IP, TCP, UDP
 
